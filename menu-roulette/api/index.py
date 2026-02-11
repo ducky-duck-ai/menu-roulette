@@ -2,16 +2,15 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 import math
-import os  # 환경 변수를 가져오기 위해 추가했습니다
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-# [보안 수정] 네이버 API 인증 정보를 환경 변수에서 가져옵니다
+# [보안 수정] 네이버 API 인증 정보
 NAVER_CLIENT_ID = os.environ.get('NAVER_CLIENT_ID')
 NAVER_CLIENT_SECRET = os.environ.get('NAVER_CLIENT_SECRET')
 
-# 아일렉스 위치 (WGS84)
 COMPANY_LAT = 37.5560662
 COMPANY_LNG = 126.9220934
 
@@ -28,7 +27,6 @@ def calculate_distance(x1, y1, x2, y2):
 @app.route('/api/search', methods=['GET'])
 def search_restaurants():
     try:
-        # 인증키가 없는 경우 에러 메시지 출력
         if not NAVER_CLIENT_ID or not NAVER_CLIENT_SECRET:
             return jsonify({
                 'success': False,
@@ -87,8 +85,6 @@ def search_restaurants():
 def home():
     return "<h1>점심 추첨기 API 서버 작동 중! ✅</h1>"
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
-
-# 파일 맨 밑에 추가
-app = app
+# Vercel 배포 시에는 app.run()이 필요 없으므로 제거하거나 주석 처리합니다.
+# if __name__ == '__main__':
+#     app.run(debug=True, host='0.0.0.0', port=5000)
